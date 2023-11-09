@@ -7,12 +7,14 @@ import service.MyLogger;
 
 import java.sql.*;
 public class DbConnectivityClass {
-
+    final static String DB_NAME="CSC311_BD_TEMP";
         MyLogger lg= new MyLogger();
-        final static String SQL_SERVER_URL = "jdbc:mysql://csc311admin@usernameserver.mariadb.database.azure.com";
-        final static String DB_URL = "jdbc:mysql://csc311admin@usernameserver.mariadb.database.azure.com/CSC311_PROJ";
-        final static String USERNAME = "csc311admin@usernameserver";
-        final static String PASSWORD = "password123!";
+        final static String SQL_SERVER_URL = "jdbc:mysql://server.mariadb.database.azure.com";//update this server name
+        final static String DB_URL = "jdbc:mysql://server.mariadb.database.azure.com/"+DB_NAME;//update this database name
+        final static String USERNAME = "csc311admin@server";// update this username
+        final static String PASSWORD = "FARM";// update this password
+
+
         private final ObservableList<Person> data = FXCollections.observableArrayList();
 
         // Method to retrieve all data from the database and store it into an observable list to use in the GUI tableview.
@@ -56,7 +58,7 @@ public class DbConnectivityClass {
                 //First, connect to MYSQL server and create the database if not created
                 Connection conn = DriverManager.getConnection(SQL_SERVER_URL, USERNAME, PASSWORD);
                 Statement statement = conn.createStatement();
-                statement.executeUpdate("CREATE DATABASE IF NOT EXISTS CSC311_HW6");
+                statement.executeUpdate("CREATE DATABASE IF NOT EXISTS "+DB_NAME+"");
                 statement.close();
                 conn.close();
 
@@ -151,7 +153,7 @@ public class DbConnectivityClass {
             connectToDatabase();
             try {
                 Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
-                String sql = "INSERT INTO users (first_name, last_name, department, major, email, password, imageURL) VALUES (?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO users (first_name, last_name, department, major, email, imageURL) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setString(1, person.getFirstName());
                 preparedStatement.setString(2, person.getLastName());
@@ -162,7 +164,6 @@ public class DbConnectivityClass {
                 int row = preparedStatement.executeUpdate();
                 if (row > 0) {
                     lg.makeLog("A new user was inserted successfully.");
-                    lg.makeLog(person.getId().toString());
                 }
                 preparedStatement.close();
                 conn.close();
