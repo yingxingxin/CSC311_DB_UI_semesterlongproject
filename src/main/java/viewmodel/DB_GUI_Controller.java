@@ -239,4 +239,32 @@ public class DB_GUI_Controller implements Initializable {
         }
     }
 
+    private Task<Void> createUploadTask(File file, ProgressBar progressBar) {
+        return new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                BlobClient blobClient = store.getContainerClient().getBlobClient(file.getName());
+                long fileSize = Files.size(file.toPath());
+                long uploadedBytes = 0;
+
+                try (FileInputStream fileInputStream = new FileInputStream(file);
+                     OutputStream blobOutputStream = blobClient.getBlockBlobClient().getBlobOutputStream()) {
+
+                    byte[] buffer = new byte[1024 * 1024]; // 1 MB buffer size
+                    int bytesRead;
+
+                    while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                        blobOutputStream.write(buffer, 0, bytesRead);
+                        uploadedBytes += bytesRead;
+
+                        // Calculate and update progress as a percentage
+                        int progress = (int) ((double) uploadedBytes / fileSize * 100);
+                        updateProgress(progress, 100);
+                    }
+                }
+
+                return null;
+            }
+        };
+    }
 }
