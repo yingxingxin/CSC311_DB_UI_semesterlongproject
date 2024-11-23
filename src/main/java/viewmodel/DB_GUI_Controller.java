@@ -1,9 +1,12 @@
 package viewmodel;
 
+import com.azure.storage.blob.BlobClient;
 import dao.DbConnectivityClass;
+import dao.StorageUploader;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -22,13 +26,19 @@ import model.Person;
 import service.MyLogger;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class DB_GUI_Controller implements Initializable {
 
+    StorageUploader store = new StorageUploader();
+    @FXML
+    ProgressBar progressBar;
     @FXML
     TextField first_name, last_name, department, major, email, imageURL;
     @FXML
