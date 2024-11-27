@@ -4,6 +4,7 @@ import com.azure.storage.blob.BlobClient;
 import dao.DbConnectivityClass;
 import dao.StorageUploader;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -37,8 +38,13 @@ import java.util.ResourceBundle;
 public class DB_GUI_Controller implements Initializable {
 
     StorageUploader store = new StorageUploader();
+
+    @FXML
+    private Button editButton, deleteButton, addButton;
     @FXML
     ProgressBar progressBar;
+    @FXML
+    private MenuItem newItem, editItem, deleteItem, CopyItem, ClearItem, ChangePic, logOut;
     @FXML
     TextField first_name, last_name, department, major, email, imageURL;
     @FXML
@@ -64,14 +70,61 @@ public class DB_GUI_Controller implements Initializable {
             tv_major.setCellValueFactory(new PropertyValueFactory<>("major"));
             tv_email.setCellValueFactory(new PropertyValueFactory<>("email"));
             tv.setItems(data);
+
+            //Initially disable the buttons
+            editItem.setDisable(true);
+            deleteItem.setDisable(true);
+            addButton.setDisable(true);
+            editButton.setDisable(true);
+            deleteButton.setDisable(true);
+
+            //Add listeners for table view selection
+            tv.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                boolean recordSelected = newValue != null;
+                editItem.setDisable(!recordSelected);
+                deleteItem.setDisable(!recordSelected);
+                editButton.setDisable(!recordSelected);
+                deleteButton.setDisable(!recordSelected);
+
+            });
+
+            // Add validation listeners for "Add" button
+            addValidationListener();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    private void addValidationListener() {
+        //Adds listeners to validate the fields
+        ChangeListener<String> fieldValidator = (observable, oldValue, newValue) -> {
+            boolean valid = validateFormFields();
+            addButton.setDisable(!valid);
+        };
+
+        first_name.textProperty().addListener(fieldValidator);
+        last_name.textProperty().addListener(fieldValidator);
+        department.textProperty().addListener(fieldValidator);
+        major.textProperty().addListener(fieldValidator);
+        email.textProperty().addListener(fieldValidator);
+        imageURL.textProperty().addListener(fieldValidator);
+    }
+
+    private boolean validateFormFields() {
+        //Makes sure that all fields are not empty and the email is valid
+        return !first_name.getText().isBlank()
+                && !last_name.getText().isBlank()
+                && !department.getText().isBlank()
+                && !major.getText().isBlank()
+                && !email.getText().isBlank()
+                && email.getText().matches("\\S+@\\S+\\.\\S+")
+                && !imageURL.getText().isBlank();
+    }
+
+
     @FXML
     protected void addNewRecord() {
-
             Person p = new Person(first_name.getText(), last_name.getText(), department.getText(),
                     major.getText(), email.getText(), imageURL.getText());
             cnUtil.insertUser(p);
@@ -150,6 +203,10 @@ public class DB_GUI_Controller implements Initializable {
         File file = (new FileChooser()).showOpenDialog(img_view.getScene().getWindow());
         if (file != null) {
             img_view.setImage(new Image(file.toURI().toString()));
+
+            Task<Void> uploadTask = createUploadTask(file, progressBar);
+            progressBar.progressProperty().bind(uploadTask.progressProperty());
+            new Thread(uploadTask).start();
         }
     }
 
@@ -238,6 +295,7 @@ public class DB_GUI_Controller implements Initializable {
             this.major = venue;
         }
     }
+
 
     private Task<Void> createUploadTask(File file, ProgressBar progressBar) {
         return new Task<>() {
