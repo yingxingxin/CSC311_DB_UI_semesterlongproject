@@ -46,7 +46,11 @@ public class DB_GUI_Controller implements Initializable {
     @FXML
     private MenuItem newItem, editItem, deleteItem, CopyItem, ClearItem, ChangePic, logOut;
     @FXML
-    TextField first_name, last_name, department, major, email, imageURL;
+    private Label statusBar;
+    @FXML
+    private ComboBox<String> majorDropdown;
+    @FXML
+    TextField first_name, last_name, department, email, imageURL;
     @FXML
     ImageView img_view;
     @FXML
@@ -70,6 +74,10 @@ public class DB_GUI_Controller implements Initializable {
             tv_major.setCellValueFactory(new PropertyValueFactory<>("major"));
             tv_email.setCellValueFactory(new PropertyValueFactory<>("email"));
             tv.setItems(data);
+
+            //Major Dropdown options
+            ObservableList<String> majors = FXCollections.observableArrayList("CS", "CPIS", "Business", "Music");
+            majorDropdown.setItems(majors);
 
             //Initially disable the buttons
             editItem.setDisable(true);
@@ -106,19 +114,30 @@ public class DB_GUI_Controller implements Initializable {
         first_name.textProperty().addListener(fieldValidator);
         last_name.textProperty().addListener(fieldValidator);
         department.textProperty().addListener(fieldValidator);
-        major.textProperty().addListener(fieldValidator);
+        //major.textProperty().addListener(fieldValidator);
         email.textProperty().addListener(fieldValidator);
         imageURL.textProperty().addListener(fieldValidator);
+        majorDropdown.valueProperty().addListener((observable, oldValue, newValue) -> {
+            boolean valid = validateFormFields();
+            addButton.setDisable(!valid);
+        });
     }
 
     private boolean validateFormFields() {
+
+        String nameRegex = "^[A-Z][a-zA-Z\\s]+$"; //Case-insensitive name
+        String departmentRegex = "^[A-Za-z\\s]+$"; //Letters and spaces only
+        String emailRegex = "^[\\w._%+-]+@[\\w.-]+\\.[A-Za-z]{2,6}$"; //email format
+        String imageUrlRegex = "^(https?|file):\\/\\/.*$"; //url format
+
         //Makes sure that all fields are not empty and the email is valid
         return !first_name.getText().isBlank()
                 && !last_name.getText().isBlank()
                 && !department.getText().isBlank()
-                && !major.getText().isBlank()
+                //&& !major.getText().isBlank()
                 && !email.getText().isBlank()
                 && email.getText().matches("\\S+@\\S+\\.\\S+")
+                && majorDropdown.getValue() != null
                 && !imageURL.getText().isBlank();
     }
 
@@ -126,7 +145,7 @@ public class DB_GUI_Controller implements Initializable {
     @FXML
     protected void addNewRecord() {
             Person p = new Person(first_name.getText(), last_name.getText(), department.getText(),
-                    major.getText(), email.getText(), imageURL.getText());
+                    majorDropdown.getValue(), email.getText(), imageURL.getText());
             cnUtil.insertUser(p);
             cnUtil.retrieveId(p);
             p.setId(cnUtil.retrieveId(p));
@@ -140,7 +159,7 @@ public class DB_GUI_Controller implements Initializable {
         first_name.setText("");
         last_name.setText("");
         department.setText("");
-        major.setText("");
+        //major.setText("");
         email.setText("");
         imageURL.setText("");
     }
@@ -182,7 +201,7 @@ public class DB_GUI_Controller implements Initializable {
         Person p = tv.getSelectionModel().getSelectedItem();
         int index = data.indexOf(p);
         Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), department.getText(),
-                major.getText(), email.getText(),  imageURL.getText());
+                majorDropdown.getValue(), email.getText(),  imageURL.getText());
         cnUtil.editUser(p.getId(), p2);
         data.remove(p);
         data.add(index, p2);
@@ -221,7 +240,7 @@ public class DB_GUI_Controller implements Initializable {
         first_name.setText(p.getFirstName());
         last_name.setText(p.getLastName());
         department.setText(p.getDepartment());
-        major.setText(p.getMajor());
+        //major.setText(p.getMajor());
         email.setText(p.getEmail());
         imageURL.setText(p.getImageURL());
     }
