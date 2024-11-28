@@ -96,15 +96,15 @@ public class DB_GUI_Controller implements Initializable {
 
             });
 
-            // Add validation listeners for "Add" button
-            addValidationListener();
+            //Validation listeners
+            validationListener();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void addValidationListener() {
+    private void validationListener() {
         //Adds listeners to validate the fields
         ChangeListener<String> fieldValidator = (observable, oldValue, newValue) -> {
             boolean valid = validateFormFields();
@@ -144,6 +144,7 @@ public class DB_GUI_Controller implements Initializable {
 
     @FXML
     protected void addNewRecord() {
+        try {
             Person p = new Person(first_name.getText(), last_name.getText(), department.getText(),
                     majorDropdown.getValue(), email.getText(), imageURL.getText());
             cnUtil.insertUser(p);
@@ -151,6 +152,10 @@ public class DB_GUI_Controller implements Initializable {
             p.setId(cnUtil.retrieveId(p));
             data.add(p);
             clearForm();
+            statusBar.setText("Added successfully");
+        } catch (Exception e) {
+            statusBar.setText("Error adding a record");
+        }
 
     }
 
@@ -160,6 +165,7 @@ public class DB_GUI_Controller implements Initializable {
         last_name.setText("");
         department.setText("");
         //major.setText("");
+        majorDropdown.setValue(null);
         email.setText("");
         imageURL.setText("");
     }
@@ -198,6 +204,7 @@ public class DB_GUI_Controller implements Initializable {
 
     @FXML
     protected void editRecord() {
+        try {
         Person p = tv.getSelectionModel().getSelectedItem();
         int index = data.indexOf(p);
         Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), department.getText(),
@@ -206,6 +213,10 @@ public class DB_GUI_Controller implements Initializable {
         data.remove(p);
         data.add(index, p2);
         tv.getSelectionModel().select(index);
+            statusBar.setText("Updated successfully");
+        } catch (Exception e) {
+            statusBar.setText("Error editing the record");
+        }
     }
 
     @FXML
