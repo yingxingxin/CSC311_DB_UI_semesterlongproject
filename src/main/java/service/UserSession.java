@@ -25,8 +25,6 @@ public class UserSession {
         userPreferences.put("PRIVILEGES",privileges);
     }
 
-
-
     public static UserSession getInstance(String userName,String password, String privileges) {
         if(instance == null) {
             synchronized (UserSession.class) {
