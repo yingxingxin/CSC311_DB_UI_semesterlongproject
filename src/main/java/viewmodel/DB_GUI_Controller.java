@@ -32,8 +32,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class DB_GUI_Controller implements Initializable {
 
@@ -44,7 +43,7 @@ public class DB_GUI_Controller implements Initializable {
     @FXML
     ProgressBar progressBar;
     @FXML
-    private MenuItem newItem, editItem, deleteItem, CopyItem, ClearItem, ChangePic, logOut;
+    private MenuItem newItem, editItem, deleteItem, CopyItem, ClearItem, ChangePic, logOut, importCSV, exportCSV;
     @FXML
     private Label statusBar;
     @FXML
@@ -323,6 +322,81 @@ public class DB_GUI_Controller implements Initializable {
             this.fname = name;
             this.lname = date;
             this.major = venue;
+        }
+    }
+
+    @FXML
+    public void importCSV(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Import CSV File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File file = fileChooser.showOpenDialog(menuBar.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                ObservableList<Person> importedData = FXCollections.observableArrayList();
+                List<String> lines = Files.readAllLines(file.toPath());
+
+                for (String line : lines) {
+                    String[] values = line.split(",");
+
+                    // Validate each row in the CSV file
+                    if (values.length != 6 || Arrays.stream(values).anyMatch(String::isBlank)) {
+                        throw new IllegalArgumentException("Invalid CSV format in row: " + line);
+                    }
+
+                    // Create a Person object from valid data
+                    Person person = new Person(values[0], values[1], values[2], values[3], values[4], values[5]);
+                    importedData.add(person);
+                }
+
+                // Add imported data to table and database
+                for (Person person : importedData) {
+                    cnUtil.insertUser(person);
+                    cnUtil.retrieveId(person);
+                    person.setId(cnUtil.retrieveId(person));
+                }
+                data.addAll(importedData);
+                tv.setItems(data);
+
+                statusBar.setText("CSV file imported successfully");
+            } catch (IllegalArgumentException e) {
+                statusBar.setText("Error importing the CSV: " + e.getMessage());
+            } catch (Exception e) {
+                statusBar.setText("Error importing the CSV file");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void exportCSV(ActionEvent actionEvent) {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export CSV File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File file = fileChooser.showSaveDialog(menuBar.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                List<String> lines = new ArrayList<>();
+                for (Person person : data) {
+                    lines.add(String.join(",",
+                            person.getFirstName(),
+                            person.getLastName(),
+                            person.getDepartment(),
+                            person.getMajor(),
+                            person.getEmail(),
+                            person.getImageURL()
+                    ));
+                }
+                Files.write(file.toPath(), lines);
+
+                statusBar.setText("CSV file exported successfully");
+            } catch (Exception e) {
+                statusBar.setText("Error exporting the CSV file");
+                e.printStackTrace();
+            }
         }
     }
 
