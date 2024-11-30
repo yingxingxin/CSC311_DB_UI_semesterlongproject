@@ -21,7 +21,7 @@ import javafx.util.Duration;
 public class LoginController {
 
     @FXML
-    private TextField usernameField;
+    private TextField usernameTextField;
     @FXML
     private PasswordField passwordField;
 
@@ -71,7 +71,7 @@ public class LoginController {
 
     private boolean validInput() {
 
-        String username = usernameField.getText();
+        String username = usernameTextField.getText();
         String password = passwordField.getText();
 
         if (username == null || username.trim().isEmpty()) {
