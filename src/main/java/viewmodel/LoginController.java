@@ -8,6 +8,9 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -17,6 +20,10 @@ import javafx.util.Duration;
 
 public class LoginController {
 
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
 
     @FXML
     private GridPane rootpane;
@@ -47,6 +54,8 @@ public class LoginController {
     }
     @FXML
     public void login(ActionEvent actionEvent) {
+
+        if (validInput()) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/db_interface_gui.fxml"));
             Scene scene = new Scene(root, 900, 600);
@@ -57,6 +66,34 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    }
+
+    private boolean validInput() {
+
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        if (username == null || username.trim().isEmpty()) {
+            alertMessage("Error", "Username cannot be empty");
+            return false;
+        }
+
+        if (password == null || password.trim().isEmpty()) {
+            alertMessage("Error", "Password cannot be empty");
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private void alertMessage(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public void signUp(ActionEvent actionEvent) {
