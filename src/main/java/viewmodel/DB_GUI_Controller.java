@@ -75,7 +75,7 @@ public class DB_GUI_Controller implements Initializable {
             tv.setItems(data);
 
             //Major Dropdown options
-            ObservableList<String> majors = FXCollections.observableArrayList("CS", "CPIS", "Business", "Music");
+            ObservableList<String> majors = FXCollections.observableArrayList("Business", "CS", "CPIS", "Music");
             majorDropdown.setItems(majors);
 
             //Initially disable the buttons
@@ -310,7 +310,7 @@ public class DB_GUI_Controller implements Initializable {
         });
     }
 
-    private static enum Major {Business, CSC, CPIS}
+    private static enum Major {Business, CS, CPIS, Music}
 
     private static class Results {
 
