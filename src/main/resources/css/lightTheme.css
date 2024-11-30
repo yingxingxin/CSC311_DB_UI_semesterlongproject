@@ -1,10 +1,10 @@
 .db_btn {
-    -fx-background-color: #a73;
+    -fx-background-color: #6e94cc;
     -fx-cursor: hand;
     -fx-font-family: "Arial";
     -fx-font-size: 15px;
     -fx-text-alignment: center;
-    -fx-text-fill: #000000;
+    -fx-text-fill: #fffefe;
     -fx-alignment: CENTER;
     -fx-background-radius: 10;
     -fx-pref-width:200px;
@@ -12,13 +12,13 @@
 }
 
 .left_pane {
-    -fx-background-color: #a73;
+    -fx-background-color: ##192440;
     -fx-pref-width: 130px;
     -fx-pref-height: 600px;
 }
 
 .admin_section {
-    -fx-background-color: #999;
+    -fx-background-color: #828896;
 }
 
 .table_columns {
@@ -28,15 +28,15 @@
 
 
 .menu_bar {
-    -fx-background-color: #841;
+    -fx-background-color: #828896;
 }
 
 .anchor_pane {
-    -fx-background-color: #a73;
+    -fx-background-color: #192440;
 }
 
 .text_field_pane {
-    -fx-background-color: #79dc05;
+    -fx-background-color: #192440;
 
 }
 
@@ -51,7 +51,7 @@
 
 .table-view .column-header,
 .table-view .column-header-background .filler {
-    -fx-background-color:  #999999;
+    -fx-background-color:  #6e94cc;
      -fx-text-fill: black;
 }
 .table-view .column-header .label{
