@@ -84,6 +84,11 @@ public class LoginController {
             return false;
         }
 
+        if (password.length() < 8 || !password.matches(".*[A-Z].*") || !password.matches(".*[0-9].*") || !password.matches(".*[*.!@#$%^&(){}[-]:;<>,.?/~_+=|].*")) {
+            alertMessage("Validation Error", "Password must be at least 8 characters long, contain one uppercase letter, one number, and one special character.");
+            return false;
+        }
+
         return true;
 
     }
