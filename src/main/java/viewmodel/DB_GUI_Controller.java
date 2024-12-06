@@ -19,6 +19,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -104,6 +105,12 @@ public class DB_GUI_Controller implements Initializable {
 
             //Validation listeners
             validationListener();
+
+            // Assign keyboard shortcuts to Edit MenuItems
+            editItem.setAccelerator(KeyCombination.keyCombination("Ctrl+E"));
+            deleteItem.setAccelerator(KeyCombination.keyCombination("Ctrl+D"));
+            ClearItem.setAccelerator(KeyCombination.keyCombination("Ctrl+R"));
+            CopyItem.setAccelerator(KeyCombination.keyCombination("Ctrl+C"));
 
         } catch (Exception e) {
             throw new RuntimeException(e);

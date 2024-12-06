@@ -35,10 +35,10 @@
                         </Menu>
                   <Menu mnemonicParsing="false" styleClass="menu_options" text="Edit">
                      <items>
-                        <MenuItem fx:id="editItem" mnemonicParsing="true" styleClass="menu_items" text="_Edit       Ctrl+E" />
-                        <MenuItem fx:id="deleteItem" mnemonicParsing="true" styleClass="menu_items" text="_Delete   Ctrl+D" />
-                        <MenuItem fx:id="ClearItem" mnemonicParsing="false" styleClass="menu_items" text="Clear     Ctrl+R" />
-                        <MenuItem fx:id="CopyItem" mnemonicParsing="false" styleClass="menu_items" text="Copy     Ctrl+C" />
+                        <MenuItem fx:id="editItem" mnemonicParsing="true" styleClass="menu_items" text="_Edit" onAction="#editRecord" />
+                        <MenuItem fx:id="deleteItem" mnemonicParsing="true" styleClass="menu_items" text="_Delete" onAction="#deleteRecord" />
+                        <MenuItem fx:id="ClearItem" mnemonicParsing="false" styleClass="menu_items" text="Clear" onAction="#clearForm" />
+                        <MenuItem fx:id="CopyItem" mnemonicParsing="false" styleClass="menu_items" text="Copy" />
                      </items>
                   </Menu>
                         <Menu mnemonicParsing="false" styleClass="menu_options" text="Theme">
