@@ -165,7 +165,14 @@ public class DB_GUI_Controller implements Initializable {
             p.setId(cnUtil.retrieveId(p));
             data.add(p);
             clearForm();
+
+            // Update image view with the image URL
+            if (p.getImageURL() != null && !p.getImageURL().isBlank()) {
+                img_view.setImage(new Image(p.getImageURL()));
+            }
+
             statusBar.setText("Added successfully");
+
         } catch (Exception e) {
             statusBar.setText("Error adding a record");
         }
@@ -266,6 +273,8 @@ public class DB_GUI_Controller implements Initializable {
             Task<Void> uploadTask = createUploadTask(file, progressBar);
             progressBar.progressProperty().bind(uploadTask.progressProperty());
             new Thread(uploadTask).start();
+
+            imageURL.setText(file.toURI().toString());
         }
     }
 
@@ -283,6 +292,13 @@ public class DB_GUI_Controller implements Initializable {
         //major.setText(p.getMajor());
         email.setText(p.getEmail());
         imageURL.setText(p.getImageURL());
+
+        // Update the profile image
+        if (p.getImageURL() != null && !p.getImageURL().isBlank()) {
+            img_view.setImage(new Image(p.getImageURL())); // Assuming imageURL is a valid image path or URL
+        } else {
+            img_view.setImage(null); // Clear the image if URL is empty
+        }
     }
 
     public void lightTheme(ActionEvent actionEvent) {
