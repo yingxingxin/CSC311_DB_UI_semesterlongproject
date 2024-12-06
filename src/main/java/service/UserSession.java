@@ -63,6 +63,10 @@ public class UserSession {
         userPreferences.remove("PRIVILEGES");
     }
 
+    public boolean userSignedIn() {
+        return userPreferences.get("USERNAME", null) != null;
+    }
+
     @Override
     public synchronized String toString() {
         return "UserSession{" +
