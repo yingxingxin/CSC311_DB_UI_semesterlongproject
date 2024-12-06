@@ -22,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Person;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -199,9 +200,25 @@ public class DB_GUI_Controller implements Initializable {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/about.fxml"));
             Stage stage = new Stage();
+            stage.setTitle("About");
             Scene scene = new Scene(root, 600, 500);
             stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    protected void displayHelp() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/view/help.fxml"));
+            Stage helpStage = new Stage();
+            helpStage.setTitle("Help");
+            helpStage.setScene(new Scene(root, 600, 500));
+            helpStage.initModality(Modality.APPLICATION_MODAL);
+            helpStage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
