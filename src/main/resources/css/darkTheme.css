@@ -123,3 +123,15 @@
 	-fx-background-radius: 2em;
 
 }
+
+/* Make table borders invisible in dark theme */
+.table-view {
+    -fx-border-color: transparent;
+}
+
+
+.table_columns {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
